@@ -13,7 +13,13 @@ def index(request):
         titulo = parameters.get('titulo', '')
         detalhes = parameters.get('detalhes', '')
         add(titulo, detalhes)  
-        return build_response(code=303, reason='See Other', headers='Location: /')
+        entrando_template = load_template('components/note.html')
+        notes_li = [
+            entrando_template.format(title=dados['titulo'], details=dados['detalhes'])
+            for dados in load_data('notes.json')
+        ]
+        notes = '\n'.join(notes_li)
+        return build_response(code=303, reason='See Other', headers='Location: /') + load_template('index.html').format(notes=notes).encode()
     
     entrando_template = load_template('components/note.html')
     notes_li = [
